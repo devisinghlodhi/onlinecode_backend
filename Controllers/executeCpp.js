@@ -13,7 +13,7 @@ const executeCpp = (filepath)=>{
     const jobId = path.basename(filepath).split(".")[0];
     const outPath = path.join(outputPath, `${jobId}.exe`);  
 
-    console.log(__dirname, "\n", filepath,"\n", outputPath, "\n", outPath);
+    // console.log(__dirname, "\n", filepath,"\n", outputPath, "\n", outPath);
 
     return new Promise((resolve, reject)=>{
         // exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`, (error, stdout, stderr)=>{
