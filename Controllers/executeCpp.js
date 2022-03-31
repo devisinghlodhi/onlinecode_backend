@@ -19,13 +19,24 @@ const executeCpp = (filepath)=>{
         // exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`, (error, stdout, stderr)=>{
         exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ${outPath}`, (error, stdout, stderr)=>{
             if(error){
+                deletefiles([filepath, outPath]);
                 reject({error, stderr})
             }
             if(stderr){
+                deletefiles([filepath, outPath]);
                 reject({stderr})
             }
+            deletefiles([filepath, outPath]);
             resolve(stdout);
         })
+    })
+}
+
+const deletefiles = (files)=>{
+    files.forEach((currentfilepath)=>{
+        if(fs.existsSync(currentfilepath)){
+            fs.unlinkSync(currentfilepath);
+        }
     })
 }
 
