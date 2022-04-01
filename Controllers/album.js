@@ -5,6 +5,7 @@ const GenerateToken = require('../Middleware/GenerateToken');
 const jwt = require("jsonwebtoken");
 const { generateFile } = require('./generateFile');
 const {executeCpp} = require('./executeCpp');
+const {executePy} = require('./executePy');
 const jwt_secret = process.env.JWT_SECRET;
 
 exports.signup = async (req, res) => {
@@ -98,9 +99,14 @@ exports.runprogram = async (req, res) => {
 
     try {
         const filepath = await generateFile(language, code);
-
-        const output = await executeCpp(filepath);
-        // const output = "hii";
+        
+        let output="";
+        if(language == "cpp"){
+            output = await executeCpp(filepath);
+        }else{
+            output = await executePy(filepath);
+        }
+        
     
         res.status(200).json({ filepath, output });
     } catch (error) {

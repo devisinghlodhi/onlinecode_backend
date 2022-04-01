@@ -1,6 +1,7 @@
 const {exec} = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const deletefiles = require('./deleteFiles');
 
 const outputPath = path.join(__dirname, "outputs");
 
@@ -29,14 +30,6 @@ const executeCpp = (filepath)=>{
             deletefiles([filepath, outPath]);
             resolve(stdout);
         })
-    })
-}
-
-const deletefiles = (files)=>{
-    files.forEach((currentfilepath)=>{
-        if(fs.existsSync(currentfilepath)){
-            fs.unlinkSync(currentfilepath);
-        }
     })
 }
 
