@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require("../Models/User");
+const Job = require("../Models/job");
 const bcrypt = require('bcrypt');
 const GenerateToken = require('../Middleware/GenerateToken');
 const jwt = require("jsonwebtoken");
@@ -79,12 +80,7 @@ exports.login = async (req, res) => {
 };
 
 
-
-
-
-
 exports.alreadylogin = async (req, res) => {
-
     res.status(200).json({ login: "success" });
 }
 
@@ -93,26 +89,75 @@ exports.alreadylogin = async (req, res) => {
 
 
 
+
+
+
+
+
+
 exports.runprogram = async (req, res) => {
-
     let { language = "cpp", code } = req.body;
-
+    let job;
     try {
         const filepath = await generateFile(language, code);
-        
+
+        job = await new Job({language, filepath}).save()
+        const jobId = job["_id"];
+        console.log(job);
+        res.status(201).json({success:true, jobId})
+
         let output="";
+
+        job["startedAt"] = new Date();
         if(language == "cpp"){
             output = await executeCpp(filepath);
         }else{
             output = await executePy(filepath);
         }
-        
-    
-        res.status(200).json({ filepath, output });
-    } catch (error) {
-        res.status(500).json({error});
-    }
-   
 
+        job["completedAt"] = new Date();
+        job["status"] = "success";
+        job["output"] = output;
+
+        await job.save();
+
+        console.log(job )
+        // res.status(200).json({ filepath, output });
+    } catch (error) {
+        job["completedAt"] = new Date();
+        job["status"] = "error";
+        job["output"] = JSON.stringify(error)
+        await job.save();
+
+        console.log(job);
+        // res.status(500).json({error});
+    }
+}
+
+
+
+
+
+exports.status = async (req, res) =>{
+    const jobId = req.query.id;
+    console.log("status requested", jobId)
+
+    if(jobId==undefined){
+        return res.status(400).json({success:false, error: "missing id query para"});
+    }
+    
+    try {
+        const job =await Job.findById(jobId);
+
+        if(job === undefined || job==null){
+            return res.status(404).json({success:false, error: "Invalid Job Id"})
+        }
+
+        return res.status(200).json({success:true , job})
+
+    } catch (err) {
+        return res.status(400).json({success:false, error: JSON.stringify(err)});
+    }
 
 }
+
