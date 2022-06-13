@@ -47,20 +47,10 @@ exports.login = async (req, res) => {
         let userpass = userExist.Password;
         let checkpass = await bcrypt.compare(Password, userpass);
 
-        // let currToken = req.cookies.token;
-        // console.log("Current token value : ", currToken);
-
         if (checkpass) {
 
             token = await userExist.generateAuthToken();
             console.log("token is : ", token);
-
-            // res.cookie("token", token, {
-            //     expires: new Date(Date.now() + 25892000000),
-            //     httpOnly: true,
-            //     // secure:true
-            // });
-
 
             res.status(200).json({
                 message: "Login Successfully",
@@ -86,11 +76,20 @@ exports.alreadylogin = async (req, res) => {
 
 
 
+exports.logout = async (req, res) => {
+    let { token } = req.body;
+    const userinfo = await jwt.verify(token, jwt_secret);
+    let userdetails = await User.findOne({_id:userinfo._id});
 
+    userdetails.tokens = userdetails.tokens.filter((currElm, index, arr)=>{ 
+        return currElm.token != token;
+    });
 
+    await userdetails.save();
+  
+    res.status(200).json({ status: "success", message: "Logout Successfully" })
 
-
-
+};
 
 
 

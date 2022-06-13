@@ -6,6 +6,7 @@ const Auth = require("../Middleware/auth");
 
 router.post("/createaccount", albumr.signup);
 router.post("/login", albumr.login);
+router.post("/logout", Auth, albumr.logout);
 router.post("/alreadylogincheck", Auth, albumr.alreadylogin);
 router.post("/run", albumr.runprogram);
 router.get("/status", albumr.status);
