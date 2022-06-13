@@ -56,7 +56,7 @@ userScheema.methods.generateAuthToken = async function () {
     } catch (error) {
         console.log(error)
     }
-}
+} 
 
 
 module.exports = mongoose.model("User", userScheema);
