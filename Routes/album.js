@@ -2,12 +2,18 @@ var express = require('express');
 const { json } = require('express/lib/response');
 var router = express.Router();
 const albumr = require("../Controllers/album");
+const forgotPass = require("../Controllers/forgotpass")
 const Auth = require("../Middleware/auth");
 
 router.post("/createaccount", albumr.signup);
 router.post("/login", albumr.login);
 router.post("/logout", Auth, albumr.logout);
-router.post("/alreadylogincheck", Auth, albumr.alreadylogin);
+router.post("/forgot", forgotPass.sendforgotlink);
+router.post("/verifyemailtoken", forgotPass.verifyemailtoken);
+router.post("/forgotchangepassword", forgotPass.forgotchangepassword);
+
+
+router.post("/alreadylogincheck", albumr.alreadylogin);
 router.post("/run", albumr.runprogram);
 router.get("/status", albumr.status);
 
