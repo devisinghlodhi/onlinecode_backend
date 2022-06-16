@@ -71,7 +71,41 @@ exports.login = async (req, res) => {
 
 
 exports.alreadylogin = async (req, res) => {
-    res.status(200).json({ login: "success" });
+
+    let { token } = req.body;
+  try {
+
+    const userinfo = await jwt.verify(token, jwt_secret);
+    let userdetails = await User.findOne({_id:userinfo._id});
+
+    let alltoken = userdetails.tokens.map((item)=>{
+        return item.token
+    })
+
+    if(alltoken.includes(token)){
+        res.json({ status: "success", message: "user verified" })
+    }else{
+        res.json({ status: "error", message: "user logout please login" })
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", message: error })
+  }
+
+
+
+
+
+
+
+
+
+
+    // res.status(200).json({ login: "success" });
+    // res.status(200).json({ login: "fail" });
+
+
 }
 
 
