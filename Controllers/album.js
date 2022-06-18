@@ -25,7 +25,7 @@ exports.signup = async (req, res) => {
                     result: 'success'
                 })
             }).catch((err) => {
-                res.send(err);
+                res.status(502).send(err);
             })
         }
 
@@ -95,24 +95,15 @@ exports.alreadylogin = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-    // res.status(200).json({ login: "success" });
-    // res.status(200).json({ login: "fail" });
-
-
 }
 
 
 
 exports.logout = async (req, res) => {
     let { token } = req.body;
-    const userinfo = await jwt.verify(token, jwt_secret);
+
+    try {
+        const userinfo = await jwt.verify(token, jwt_secret);
     let userdetails = await User.findOne({_id:userinfo._id});
 
     userdetails.tokens = userdetails.tokens.filter((currElm, index, arr)=>{ 
@@ -122,6 +113,10 @@ exports.logout = async (req, res) => {
     await userdetails.save();
   
     res.status(200).json({ status: "success", message: "Logout Successfully" })
+
+    } catch (error) {
+        res.status(200).json({ status: "error", message: error })
+    }
 
 };
 
