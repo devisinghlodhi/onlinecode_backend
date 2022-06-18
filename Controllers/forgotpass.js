@@ -51,7 +51,7 @@ exports.sendforgotlink = async (req, res) => {
 
   } catch (error) {
     console.log(error);
-    res.json({ status: "error", error: error })
+    res.status(502).json({ status: "error", message: error })
   }
 
 };
