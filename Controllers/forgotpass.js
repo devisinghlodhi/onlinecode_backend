@@ -22,6 +22,7 @@ exports.sendforgotlink = async (req, res) => {
     } else {
 
       let token = jwt.sign({ email: email }, jwt_secret, { expiresIn: (60 * 5) });
+      
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -63,7 +64,7 @@ exports.verifyemailtoken = async (req, res) => {
   let { token } = req.body;
   try {
 
-    const userinfo = await jwt.verify(token, process.env.jwt_secret);
+    const userinfo = await jwt.verify(token, jwt_secret);
     console.log(userinfo.email);
 
     res.json({ status: "success", message: "Email Link Verified" })
@@ -81,7 +82,7 @@ exports.forgotchangepassword = async (req, res) => {
   let { token, password } = req.body;
 
   try {
-    const userinfo = await jwt.verify(token, process.env.jwt_secret);
+    const userinfo = await jwt.verify(token, jwt_secret);
     const currUser = await User.findOne({ Email: userinfo.email })
 
     if (!currUser) {      

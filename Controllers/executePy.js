@@ -10,7 +10,7 @@ const executePy = (filepath)=>{
     
     return new Promise((resolve, reject)=>{
         
-        exec(`python ${filepath}`, (error, stdout, stderr)=>{
+        exec(`python3 ${filepath}`, (error, stdout, stderr)=>{
             if(error){
                 deletefiles([filepath]);
                 reject({error, stderr})
