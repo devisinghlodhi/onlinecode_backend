@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 app.use(
     cors({
-      origin: [`http://localhost:3000`, 'https://onlinecodecompiler.vercel.app', 'https://onlinecodecompiler-devisinghlodhi1999-gmailcom.vercel.app' , 'https://onlinecodecompiler-git-main-devisinghlodhi1999-gmailcom.vercel.app' , 'http://onlinecodecompiler.tk/' , 'https://onlinecodecompiler.tk/' , 'http://www.onlinecodecompiler.tk/' , 'https://www.onlinecodecompiler.tk/'],
+      origin: [`http://localhost:3000`, 'https://onlinecodecompiler.vercel.app', 'https://onlinecodecompiler-devisinghlodhi1999-gmailcom.vercel.app' , 'https://onlinecodecompiler-git-main-devisinghlodhi1999-gmailcom.vercel.app' , 'http://onlinecodecompiler.tk' , 'https://onlinecodecompiler.tk' , 'http://www.onlinecodecompiler.tk' , 'https://www.onlinecodecompiler.tk'],
       credentials: 'true',
     })
   );
