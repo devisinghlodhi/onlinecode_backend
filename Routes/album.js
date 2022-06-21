@@ -25,6 +25,6 @@ router.get("/status", albumr.status);
 // router.delete("/DeleteAlbums/:id", albumr.albumsdelete);
 // router.delete("/DeleteOneAlbums/:id", albumr.albumsdeleteone);
 
-
-
 module.exports = router;
+
+

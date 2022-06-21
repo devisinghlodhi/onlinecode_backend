@@ -75,6 +75,7 @@ exports.alreadylogin = async (req, res) => {
     let { token } = req.body;
   try {
 
+    console.log("auth token is : ", token)
     const userinfo = await jwt.verify(token, jwt_secret);
     let userdetails = await User.findOne({_id:userinfo._id});
 
@@ -83,8 +84,10 @@ exports.alreadylogin = async (req, res) => {
     })
 
     if(alltoken.includes(token)){
+        console.log({ status: "success", message: "user verified" });
         res.json({ status: "success", message: "user verified" })
     }else{
+        console.log({ status: "error", message: "user logout please login" });
         res.json({ status: "error", message: "user logout please login" })
     }
 
