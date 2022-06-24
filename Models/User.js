@@ -32,7 +32,10 @@ var userScheema = new mongoose.Schema(
                     type: String
                 }
             }
-        ]
+        ],
+        emailToken: {
+            type: String
+        }
     },
     { timestamps: true }
 );

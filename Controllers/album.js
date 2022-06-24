@@ -71,7 +71,6 @@ exports.login = async (req, res) => {
 
 
 exports.alreadylogin = async (req, res) => {
-
     let { token } = req.body;
   try {
 

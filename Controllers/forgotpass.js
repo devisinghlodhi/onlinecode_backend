@@ -22,7 +22,10 @@ exports.sendforgotlink = async (req, res) => {
     } else {
 
       let token = jwt.sign({ email: email }, jwt_secret, { expiresIn: (60 * 5) });
-      
+
+      userExist.emailToken = token;
+      await userExist.save();
+
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -64,10 +67,18 @@ exports.verifyemailtoken = async (req, res) => {
   let { token } = req.body;
   try {
 
-    const userinfo = await jwt.verify(token, jwt_secret);
-    console.log(userinfo.email);
-
-    res.json({ status: "success", message: "Email Link Verified" })
+     jwt.verify(token, jwt_secret, async (err, userinfo)=> {
+      if (err) {
+        res.json({ status: "failed", message: "Link is expired." })
+      } else {
+        const userData = await User.findOne({ Email: userinfo.email })
+        if (userData.emailToken == token) {
+          res.json({ status: "success", message: "Email Link Verified" })
+        } else {
+          res.json({ status: "failed", message: "Link is expired." })
+        }
+      }
+    });
 
   } catch (error) {
     console.log(error);
@@ -85,17 +96,18 @@ exports.forgotchangepassword = async (req, res) => {
     const userinfo = await jwt.verify(token, jwt_secret);
     const currUser = await User.findOne({ Email: userinfo.email })
 
-    if (!currUser) {      
+    if (!currUser) {
       res.status(502).json({ status: "error", message: "This Email id does not registered." })
     } else {
 
       currUser.Password = password;
+      currUser.emailToken = '';
       await currUser.save();
 
       res.json({ status: "success", message: "Password successfully saved" })
     }
 
-  } catch (error) {    
+  } catch (error) {
     console.log(error)
     res.status(500).json({ status: "error", message: error })
   }
