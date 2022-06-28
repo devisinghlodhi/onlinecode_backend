@@ -49,6 +49,7 @@ app.use(
 app.use("/api",albumsRoutes )
 
 app.use("/", async(req, res)=>{
+console.log('hello world')
 res.send('Hello world');
 })
 

@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const { generateFile } = require('./generateFile');
 const {executeCpp} = require('./executeCpp');
 const {executePy} = require('./executePy');
+const {executeJavascript} = require('./executeJavascript');
 const jwt_secret = process.env.JWT_SECRET;
 
 exports.signup = async (req, res) => {
@@ -41,7 +42,8 @@ exports.login = async (req, res) => {
 
     let { Email, Password } = req.body;
 
-    const userExist = await User.findOne({ Email: Email })
+    try {
+        const userExist = await User.findOne({ Email: Email })
     if (userExist) {
         let token;
         let userpass = userExist.Password;
@@ -66,12 +68,18 @@ exports.login = async (req, res) => {
     } else {
         res.status(422).json({ error: "This Email id dosen't Registered" })
     }
+    } catch (error) {
+        console.log(error)
+        res.status(422).json({ error: "Something went wrong", msg: error })
+    }
+    
 
 };
 
 
 exports.alreadylogin = async (req, res) => {
     let { token } = req.body;
+    console.log(req.body)
   try {
 
     console.log("auth token is : ", token)
@@ -94,12 +102,7 @@ exports.alreadylogin = async (req, res) => {
     console.log(error);
     res.json({ status: "error", message: error })
   }
-
-
-
 }
-
-
 
 exports.logout = async (req, res) => {
     let { token } = req.body;
@@ -131,7 +134,7 @@ exports.runprogram = async (req, res) => {
     try {
         const filepath = await generateFile(language, code);
 
-        job = await new Job({language, filepath}).save()
+        job = await new Job({language , filepath}).save()
         const jobId = job["_id"];
         console.log(job);
         res.status(201).json({success:true, jobId})
@@ -141,7 +144,11 @@ exports.runprogram = async (req, res) => {
         job["startedAt"] = new Date();
         if(language == "cpp"){
             output = await executeCpp(filepath);
-        }else{
+        }
+        else if(language == "js"){
+            output = await executeJavascript(filepath);
+        }
+        else{
             output = await executePy(filepath);
         }
 
@@ -152,15 +159,18 @@ exports.runprogram = async (req, res) => {
         await job.save();
 
         console.log(job )
-        // res.status(200).json({ filepath, output });
+        
     } catch (error) {
+        
         job["completedAt"] = new Date();
         job["status"] = "error";
         job["output"] = JSON.stringify(error)
         await job.save();
 
+        console.log("error in code", error)
         console.log(job);
-        // res.status(500).json({error});
+        
+        
     }
 }
 

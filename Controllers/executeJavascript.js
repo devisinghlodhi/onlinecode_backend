@@ -4,14 +4,14 @@ const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
 
-const executePy = (filepath)=>{
+const executeJavascript = (filepath)=>{
 
     const jobId = path.basename(filepath).split(".")[0];
     const codefilePath = path.join(__dirname, "codes" , jobId);  
     
     return new Promise((resolve, reject)=>{
-        
-        exec(`python3 ${filepath}`, (error, stdout, stderr)=>{
+        console.log(filepath)
+        exec(`node ${filepath}`, (error, stdout, stderr)=>{
             if(error){
                 deletefiles([filepath]);
                 deletefolders([codefilePath]);
@@ -30,5 +30,5 @@ const executePy = (filepath)=>{
 }
 
 module.exports = {
-    executePy
+    executeJavascript
 }

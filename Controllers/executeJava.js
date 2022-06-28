@@ -4,7 +4,7 @@ const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
 
-const executePy = (filepath)=>{
+const executeJava = (filepath)=>{
 
     const jobId = path.basename(filepath).split(".")[0];
     const codefilePath = path.join(__dirname, "codes" , jobId);  
@@ -30,5 +30,5 @@ const executePy = (filepath)=>{
 }
 
 module.exports = {
-    executePy
+    executeJava
 }
