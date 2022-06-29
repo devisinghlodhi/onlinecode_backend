@@ -8,6 +8,7 @@ const { generateFile } = require('./generateFile');
 const {executeCpp} = require('./executeCpp');
 const {executePy} = require('./executePy');
 const {executeJavascript} = require('./executeJavascript');
+const { executeJava } = require('./executeJava');
 const jwt_secret = process.env.JWT_SECRET;
 
 exports.signup = async (req, res) => {
@@ -144,6 +145,9 @@ exports.runprogram = async (req, res) => {
         job["startedAt"] = new Date();
         if(language == "cpp"){
             output = await executeCpp(filepath);
+        }
+        else if(language == "java"){
+            output = await executeJava(filepath);
         }
         else if(language == "js"){
             output = await executeJavascript(filepath);

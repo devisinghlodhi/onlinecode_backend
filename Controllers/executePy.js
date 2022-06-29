@@ -7,23 +7,23 @@ const deletefolders = require('./deleteFolders');
 const executePy = (filepath)=>{
 
     const jobId = path.basename(filepath).split(".")[0];
-    const codefilePath = path.join(__dirname, "codes" , jobId);  
+    const codeJobidfolderPath = path.join(__dirname, "codes" , jobId);  
     
     return new Promise((resolve, reject)=>{
         
         exec(`python3 ${filepath}`, (error, stdout, stderr)=>{
             if(error){
                 deletefiles([filepath]);
-                deletefolders([codefilePath]);
+                deletefolders([codeJobidfolderPath]);
                 reject({error, stderr})
             }
             if(stderr){
                 deletefiles([filepath]);
-                deletefolders([codefilePath]);
+                deletefolders([codeJobidfolderPath]);
                 reject({stderr})
             }
             deletefiles([filepath]);
-            deletefolders([codefilePath]);
+            deletefolders([codeJobidfolderPath]);
             resolve(stdout);
         })
     })
