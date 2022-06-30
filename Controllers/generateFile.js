@@ -17,11 +17,17 @@ const generateFile = async (format, content)=>{
 if(!fs.existsSync(dirCodes)){
     fs.mkdirSync(dirCodes, {recursive:true});
 }
-
-    const filename = `${jobId}.${format}`;
+    try {
+        const filename = `${jobId}.${format}`;
     const filepath = path.join(dirCodes, filename);
     await fs.writeFileSync(filepath, content);
-    return filepath;    
+    console.log(filepath)
+    return filepath;        
+    } catch (error) {
+        console.log(error)
+        return "error in generating file";    
+    }
+    
 };
 
 

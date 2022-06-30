@@ -4,14 +4,15 @@ const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
 
-const executeJavascript = (filepath)=>{
+const executeGo = (filepath)=>{
 
     const jobId = path.basename(filepath).split(".")[0];
     const codeJobidfolderPath = path.join(__dirname, "codes" , jobId);  
     
     return new Promise((resolve, reject)=>{
         console.log(filepath)
-        exec(`cd ${codeJobidfolderPath} && node ${jobId}.js`, (error, stdout, stderr)=>{
+        // exec(`dir`, (error, stdout, stderr)=>{
+        exec(`go run ${filepath}`, (error, stdout, stderr)=>{
             if(error){
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);
@@ -30,5 +31,5 @@ const executeJavascript = (filepath)=>{
 }
 
 module.exports = {
-    executeJavascript
+    executeGo
 }

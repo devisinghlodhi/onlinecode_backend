@@ -9,6 +9,9 @@ const {executeCpp} = require('./executeCpp');
 const {executePy} = require('./executePy');
 const {executeJavascript} = require('./executeJavascript');
 const { executeJava } = require('./executeJava');
+const { executeGo } = require('./executeGo');
+
+
 const jwt_secret = process.env.JWT_SECRET;
 
 exports.signup = async (req, res) => {
@@ -146,14 +149,21 @@ exports.runprogram = async (req, res) => {
         if(language == "cpp"){
             output = await executeCpp(filepath);
         }
+        else if(language == "py"){
+            output = await executePy(filepath);
+        }
         else if(language == "java"){
             output = await executeJava(filepath);
         }
         else if(language == "js"){
             output = await executeJavascript(filepath);
         }
+        else if(language == "go"){
+            output = await executeGo(filepath);            
+        }
         else{
-            output = await executePy(filepath);
+            
+            
         }
 
         job["completedAt"] = new Date();
@@ -165,13 +175,13 @@ exports.runprogram = async (req, res) => {
         console.log(job )
         
     } catch (error) {
+        console.log("error in code", error)
         
         job["completedAt"] = new Date();
         job["status"] = "error";
         job["output"] = JSON.stringify(error)
         await job.save();
 
-        console.log("error in code", error)
         console.log(job);
         
         
