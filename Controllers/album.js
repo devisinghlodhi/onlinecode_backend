@@ -10,6 +10,9 @@ const {executePy} = require('./executePy');
 const {executeJavascript} = require('./executeJavascript');
 const { executeJava } = require('./executeJava');
 const { executeGo } = require('./executeGo');
+const { executeR } = require('./executeR');
+const { executeRuby } = require('./executeRuby');
+const { executePhp } = require('./executePhp');
 
 
 const jwt_secret = process.env.JWT_SECRET;
@@ -160,6 +163,15 @@ exports.runprogram = async (req, res) => {
         }
         else if(language == "go"){
             output = await executeGo(filepath);            
+        }
+        else if(language == "r"){
+            output = await executeR(filepath);            
+        }
+        else if(language == "rb"){
+            output = await executeRuby(filepath);            
+        }
+        else if(language == "php"){
+            output = await executePhp(filepath);            
         }
         else{
             
