@@ -13,6 +13,8 @@ const { executeGo } = require('./executeGo');
 const { executeR } = require('./executeR');
 const { executeRuby } = require('./executeRuby');
 const { executePhp } = require('./executePhp');
+const { executeCsharp } = require('./executeCsharp');
+const { executeSwift } = require('./executeSwift');
 
 
 const jwt_secret = process.env.JWT_SECRET;
@@ -164,6 +166,9 @@ exports.runprogram = async (req, res) => {
         else if(language == "go"){
             output = await executeGo(filepath);            
         }
+        else if(language == "cs"){
+            output = await executeCsharp(filepath);            
+        }
         else if(language == "r"){
             output = await executeR(filepath);            
         }
@@ -172,6 +177,9 @@ exports.runprogram = async (req, res) => {
         }
         else if(language == "php"){
             output = await executePhp(filepath);            
+        }
+        else if(language == "swift"){
+            output = await executeSwift(filepath);            
         }
         else{
             

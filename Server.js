@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require('express')
 var cors = require('cors')
-// const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
@@ -24,7 +23,6 @@ mongoose.connect(process.env.DATABASE, {
 app.use(express.urlencoded({extended:true}));
 app.use(express.json())
 
-// app.use(bodyParser.JSON());
 app.use(bodyParser.json());
 app.use(cookieParser());
 // app.use(cors());
