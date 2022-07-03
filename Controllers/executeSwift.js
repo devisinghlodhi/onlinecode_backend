@@ -11,7 +11,7 @@ const executeSwift = (filepath)=>{
     
     return new Promise((resolve, reject)=>{
         console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",filepath)    
-        exec(`cd ${codeJobidfolderPath} && ls`, (error, stdout, stderr)=>{
+        exec(`cd ${codeJobidfolderPath} && swift ${jobId}.swift`, (error, stdout, stderr)=>{
             if(error){
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);

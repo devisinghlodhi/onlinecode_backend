@@ -12,6 +12,7 @@ const { executeJava } = require('./executeJava');
 const { executeGo } = require('./executeGo');
 const { executeR } = require('./executeR');
 const { executeRuby } = require('./executeRuby');
+const { executeKotlin } = require('./executeKotlin');
 const { executePhp } = require('./executePhp');
 const { executeCsharp } = require('./executeCsharp');
 const { executeSwift } = require('./executeSwift');
@@ -174,6 +175,9 @@ exports.runprogram = async (req, res) => {
         }
         else if(language == "rb"){
             output = await executeRuby(filepath);            
+        }
+        else if(language == "kt"){
+            output = await executeKotlin(filepath);            
         }
         else if(language == "php"){
             output = await executePhp(filepath);            
