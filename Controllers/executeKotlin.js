@@ -20,8 +20,8 @@ const executeKotlin = (filepath)=>{
     // console.log(__dirname, "\n", filepath,"\n", outputPath, "\n", outPath);
 
     return new Promise((resolve, reject)=>{
-        // kotlinc first.kt -include-runtime -d second.jar && java -jar second.jar
-        // exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ${outPath}`, (error, stdout, stderr)=>{
+        
+        
         exec(`kotlinc ${filepath} -include-runtime -d ${outPath} && cd ${outputPath} && java -jar ${outPath}`, (error, stdout, stderr)=>{
             
             if(error){

@@ -4,6 +4,7 @@ const Job = require("../Models/job");
 const bcrypt = require('bcrypt');
 const GenerateToken = require('../Middleware/GenerateToken');
 const jwt = require("jsonwebtoken");
+const {addJobToQueue} = require("./jobQueue")
 const { generateFile } = require('./generateFile');
 const {executeCpp} = require('./executeCpp');
 const {executePy} = require('./executePy');
@@ -146,69 +147,15 @@ exports.runprogram = async (req, res) => {
 
         job = await new Job({language , filepath}).save()
         const jobId = job["_id"];
+
+        addJobToQueue(jobId);
+
         console.log(job);
         res.status(201).json({success:true, jobId})
 
-        let output="";
-
-        job["startedAt"] = new Date();
-        if(language == "cpp"){
-            output = await executeCpp(filepath);
-        }
-        else if(language == "py"){
-            output = await executePy(filepath);
-        }
-        else if(language == "java"){
-            output = await executeJava(filepath);
-        }
-        else if(language == "js"){
-            output = await executeJavascript(filepath);
-        }
-        else if(language == "go"){
-            output = await executeGo(filepath);            
-        }
-        else if(language == "cs"){
-            output = await executeCsharp(filepath);            
-        }
-        else if(language == "r"){
-            output = await executeR(filepath);            
-        }
-        else if(language == "rb"){
-            output = await executeRuby(filepath);            
-        }
-        else if(language == "kt"){
-            output = await executeKotlin(filepath);            
-        }
-        else if(language == "php"){
-            output = await executePhp(filepath);            
-        }
-        else if(language == "swift"){
-            output = await executeSwift(filepath);            
-        }
-        else{
-            
-            
-        }
-
-        job["completedAt"] = new Date();
-        job["status"] = "success";
-        job["output"] = output;
-
-        await job.save();
-
-        console.log(job )
-        
-    } catch (error) {
-        console.log("error in code", error)
-        
-        job["completedAt"] = new Date();
-        job["status"] = "error";
-        job["output"] = JSON.stringify(error)
-        await job.save();
-
-        console.log(job);
-        
-        
+    }catch(err){
+        console.log("error is :",err);
+        return res.status(500).json({success:false , err : JSON.stringify(err)})
     }
 }
 

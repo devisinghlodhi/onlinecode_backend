@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
+const deleteDockerFolder = require('./deleteDockerFolder');
+const ConId = process.env.CONTAINER_ID;
 
 const executeSwift = (filepath)=>{
 
@@ -10,20 +12,25 @@ const executeSwift = (filepath)=>{
     const codeJobidfolderPath = path.join(__dirname, "codes" , jobId);  
     
     return new Promise((resolve, reject)=>{
-        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",filepath)    
+        
+        // exec(`docker exec -i --user normaluser ${ConId} swift ${jobId}/${jobId}.swift `, (error, stdout, stderr) => {
         exec(`cd ${codeJobidfolderPath} && swift ${jobId}.swift`, (error, stdout, stderr)=>{
-            if(error){
-                deletefiles([filepath]);
-                deletefolders([codeJobidfolderPath]);
-                reject({error, stderr})
-            }
             if(stderr){
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);
+                deleteDockerFolder(jobId);
                 reject({stderr})
             }
+            if(error){
+                deletefiles([filepath]);
+                deletefolders([codeJobidfolderPath]);
+                deleteDockerFolder(jobId);
+                reject({error, stderr})
+            }
+            
             deletefiles([filepath]);
             deletefolders([codeJobidfolderPath]);
+            deleteDockerFolder(jobId);
             resolve(stdout);
         })
     })
