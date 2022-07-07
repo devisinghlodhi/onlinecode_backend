@@ -23,7 +23,7 @@ const executeCsharp = (filepath)=>{
     
     return new Promise((resolve, reject)=>{        
         
-        execgit s(`docker exec -i ${ConId} mcs -out:${jobId}/${jobId}.exe ${jobId}/${jobId}.cs && docker exec -i --user normaluser ${ConId} mono ./${jobId}/${jobId}.exe`, (error, stdout, stderr) => {
+        exec(`docker exec -i ${ConId} mcs -out:${jobId}/${jobId}.exe ${jobId}/${jobId}.cs && docker exec -i --user normaluser ${ConId} mono ./${jobId}/${jobId}.exe`, (error, stdout, stderr) => {
         // exec(`mcs -out:${outPath} ${filepath} && cd ${outputPath} && mono ${outPath}`, (error, stdout, stderr)=>{
             if(error){
                 deletefiles([filepath, outPath]);
