@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
+const deleteDockerFolder = require('./deleteDockerFolder');
+const ConId = process.env.CONTAINER_ID;
 const fsPromises = fs.promises;
 
 const getClassfilepath = async (codeJobidfolderPath) => {
@@ -28,11 +30,13 @@ const executeJava = async (filepath) => {
             if (error) {
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);
+                deleteDockerFolder(jobId);
                 reject({ error, stderr })
             }
             else if (stderr) {
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);
+                deleteDockerFolder(jobId);
                 reject({ stderr })
             }
             else {
@@ -51,19 +55,25 @@ const executeJava = async (filepath) => {
                 let classfilePath_with_ext = path.join(__dirname, "codes", jobId, classFile[0]);
 
 
-                exec(`cd ${codeJobidfolderPath} && java ${classfilePath}`, (error, stdout, stderr) => {
+
+                exec(`docker cp ${classfilePath_with_ext} ${ConId}:/data/${jobId}/${classFile[0]} && docker exec -i --user normaluser ${ConId} cd ${jobId} java ${classfilePath}`, (error, stdout, stderr) => {
+
+                // exec(`cd ${codeJobidfolderPath} && java ${classfilePath}`, (error, stdout, stderr) => {
                     if (error) {
                         deletefiles([classfilePath_with_ext, filepath]);
                         deletefolders([codeJobidfolderPath]);
+                        deleteDockerFolder(jobId);
                         reject({ error, stderr })
                     }
                     if (stderr) {
                         deletefiles([classfilePath_with_ext, filepath]);
                         deletefolders([codeJobidfolderPath]);
+                        deleteDockerFolder(jobId);
                         reject({ stderr })
                     }
                     deletefiles([classfilePath_with_ext, filepath]);
                     deletefolders([codeJobidfolderPath]);
+                    deleteDockerFolder(jobId);
                     resolve(stdout);
                 })
 
