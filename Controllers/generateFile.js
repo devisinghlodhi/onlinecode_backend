@@ -22,8 +22,8 @@ const generateFile = async (format, content) => {
         const filepath = path.join(dirCodes, filename);        
         await fsfile.writeFile(filepath, content);
         
-        const { stdout, stderr } = await exec(`docker exec -i ${ConId} mkdir ${jobId} && docker cp ${filepath} ${ConId}:/data/${jobId}/${jobId}.${format}`);
-        console.log("file copied:", stdout, stderr);
+        // const { stdout, stderr } = await exec(`docker exec -i ${ConId} mkdir ${jobId} && docker cp ${filepath} ${ConId}:/data/${jobId}/${jobId}.${format}`);
+        // console.log("file copied:", stdout, stderr);
 
         return filepath;
     } catch (error) {
