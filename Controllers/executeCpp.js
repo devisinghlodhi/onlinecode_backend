@@ -23,8 +23,8 @@ const executeCpp = (filepath) => {
 
     return new Promise((resolve, reject) => {
                 
-        // exec(`docker exec -i ${ConId} g++ ${jobId}/${jobId}.cpp -o ${jobId}/${jobId}.exe && docker exec -i --user normaluser ${ConId} ./${jobId}/${jobId}.exe`, (error, stdout, stderr) => {
-            exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ${outPath}`, (error, stdout, stderr)=>{   
+        exec(`docker exec -i ${ConId} g++ ${jobId}/${jobId}.cpp -o ${jobId}/${jobId}.exe && docker exec -i --user normaluser ${ConId} ./${jobId}/${jobId}.exe`, (error, stdout, stderr) => {
+            // exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ${outPath}`, (error, stdout, stderr)=>{   
             if (stderr) {
                 deletefiles([filepath, outPath]);
                 deletefolders([codeJobidfolderPath]);

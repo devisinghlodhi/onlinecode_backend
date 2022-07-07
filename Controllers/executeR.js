@@ -13,8 +13,8 @@ const executeR = (filepath)=>{
     
     return new Promise((resolve, reject)=>{
         
-        // exec(`docker exec -i --user normaluser ${ConId} Rscript ${jobId}/${jobId}.r `, (error, stdout, stderr) => {
-        exec(`Rscript ${filepath}`, (error, stdout, stderr)=>{
+        exec(`docker exec -i --user normaluser ${ConId} Rscript ${jobId}/${jobId}.r `, (error, stdout, stderr) => {
+        // exec(`Rscript ${filepath}`, (error, stdout, stderr)=>{
             if(stderr){
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);

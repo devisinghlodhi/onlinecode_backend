@@ -13,8 +13,8 @@ const executeSwift = (filepath)=>{
     
     return new Promise((resolve, reject)=>{
         
-        // exec(`docker exec -i --user normaluser ${ConId} swift ${jobId}/${jobId}.swift `, (error, stdout, stderr) => {
-        exec(`cd ${codeJobidfolderPath} && swift ${jobId}.swift`, (error, stdout, stderr)=>{
+        exec(`docker exec -i --user normaluser ${ConId} swift ${jobId}/${jobId}.swift `, (error, stdout, stderr) => {
+        // exec(`cd ${codeJobidfolderPath} && swift ${jobId}.swift`, (error, stdout, stderr)=>{
             if(stderr){
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);

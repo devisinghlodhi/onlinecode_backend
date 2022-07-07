@@ -13,8 +13,8 @@ const executeGo = (filepath)=>{
     
     return new Promise((resolve, reject)=>{
         
-        // exec(`docker exec -i --user normaluser ${ConId} go run ${jobId}/${jobId}.go `, (error, stdout, stderr) => {
-        exec(`go run ${filepath}`, (error, stdout, stderr)=>{
+        exec(`docker exec -i --user normaluser ${ConId} go run ${jobId}/${jobId}.go `, (error, stdout, stderr) => {
+        // exec(`go run ${filepath}`, (error, stdout, stderr)=>{
             if(stderr){
                 deletefiles([filepath]);
                 deletefolders([codeJobidfolderPath]);
