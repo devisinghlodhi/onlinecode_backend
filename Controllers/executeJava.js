@@ -56,7 +56,7 @@ const executeJava = async (filepath) => {
 
 
 
-                exec(`docker cp ${classfilePath_with_ext} ${ConId}:/data/${jobId}/${classFile[0]} && docker exec -i --user normaluser ${ConId} cd ${jobId} java ${classfilePath}`, (error, stdout, stderr) => {
+                exec(`docker cp ${classfilePath_with_ext} ${ConId}:/data/${jobId}/${classFile[0]} && docker exec -i --user normaluser ${ConId} bash -c "cd ${jobId} && java ${classfilePath}"`, (error, stdout, stderr) => {
 
                 // exec(`cd ${codeJobidfolderPath} && java ${classfilePath}`, (error, stdout, stderr) => {
                     if (error) {
