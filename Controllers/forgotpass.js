@@ -7,8 +7,10 @@ const jwt = require("jsonwebtoken");
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const { executePy } = require('./executePy');
+const emailjs = require("@emailjs/nodejs")
+// var nodemailer = require('nodemailer');
 const jwt_secret = process.env.JWT_SECRET;
-var nodemailer = require('nodemailer');
+
 
 
 exports.sendforgotlink = async (req, res) => {
@@ -26,31 +28,56 @@ exports.sendforgotlink = async (req, res) => {
       userExist.emailToken = token;
       await userExist.save();
 
-      var transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // must be true for 465
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.EMAIL_PASS
-        }
-      });
 
-      var mailOptions = {
-        from: `"Online Code Compiler" <${process.env.EMAIL}>`,
-        to: email,
-        subject: 'Forgot Passowrd by Link',
-        text: `Click on this link to Forgot Password - ${hosturl}/${token}     Link will be Expire in - 5 Minutes.`
+      // var transporter = nodemailer.createTransport({
+      //   host: "smtp.gmail.com",
+      //   port: 465,
+      //   secure: true, // must be true for 465
+      //   auth: {
+      //     user: process.env.EMAIL,
+      //     pass: process.env.EMAIL_PASS
+      //   }
+      // });
+
+      // var mailOptions = {
+      //   from: `"Online Code Compiler" <${process.env.EMAIL}>`,
+      //   to: email,
+      //   subject: 'Forgot Passowrd by Link',
+      //   text: `Click on this link to Forgot Password - ${hosturl}/${token}     Link will be Expire in - 5 Minutes.`
+      // }
+
+      // transporter.sendMail(mailOptions, function (error, info) {
+      //   if (error) {
+      //     console.log(error);
+      //     res.status(501).json({ status: "error", message: error })
+      //   }
+      //   else {
+      //     console.log('Email sent: ' + info.response);
+      //     res.json({ status: "success", message: "Email Successfully Sent to email id" })
+      //   }
+      // });
+
+      const templateParams = {
+        to_email: email,
+        reply_to: process.env.EMAIL,
+        expiry_time: "5",
+        reset_link: `${hosturl}/${token}`,
       };
 
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-          res.status(501).json({ status: "error", message: error })
-        } else {
-          console.log('Email sent: ' + info.response);
-          res.json({ status: "success", message: "Email Successfully Sent to email id" })
+      emailjs.send(
+        process.env.EMAILJS_SERVICE_ID,
+        process.env.EMAILJS_TEMPLATE_ID,
+        templateParams,
+        {
+          publicKey: process.env.EMAILJS_PUBLIC_KEY,
+          privateKey: process.env.EMAILJS_PRIVATE_KEY,
         }
+      ).then((result) => {
+        console.log('Email sent: ' + result.text);
+        res.json({ status: "success", message: "Email Successfully Sent to email id" })
+      }, (error) => {
+        console.log(error);
+        res.status(501).json({ status: "error", message: error })
       });
 
     }
@@ -69,7 +96,7 @@ exports.verifyemailtoken = async (req, res) => {
   let { token } = req.body;
   try {
 
-     jwt.verify(token, jwt_secret, async (err, userinfo)=> {
+    jwt.verify(token, jwt_secret, async (err, userinfo) => {
       if (err) {
         res.json({ status: "failed", message: "Link is expired." })
       } else {

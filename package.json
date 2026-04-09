@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@emailjs/nodejs": "^5.0.2",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
     "bull": "^4.8.4",
