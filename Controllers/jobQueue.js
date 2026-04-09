@@ -96,7 +96,8 @@ jobQueue.on('failed', (error) => {
     console.log(error.data.id, "failed", error.failedReason);
 })
 
-jobQueue.on('error', ()=>{
+jobQueue.on('error', (err)=>{
+    console.log(err)
     console.log("some error");
 })
 

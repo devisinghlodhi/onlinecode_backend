@@ -8,6 +8,7 @@ const { v4: uuid } = require("uuid");
 const fsfile = require('fs').promises;
 
 const path = require('path');
+const EXECUTE_ON_DOCKER = require('../config')
 const ConId = process.env.CONTAINER_ID;
 
 const generateFile = async (format, content) => {
@@ -19,11 +20,13 @@ const generateFile = async (format, content) => {
     }
     try {
         const filename = `${jobId}.${format}`;
-        const filepath = path.join(dirCodes, filename);        
+        const filepath = path.join(dirCodes, filename);
         await fsfile.writeFile(filepath, content);
-        
-        // const { stdout, stderr } = await exec(`docker exec -i ${ConId} mkdir ${jobId} && docker cp ${filepath} ${ConId}:/data/${jobId}/${jobId}.${format}`);
-        // console.log("file copied:", stdout, stderr);
+
+        if (EXECUTE_ON_DOCKER) {
+            const { stdout, stderr } = await exec(`docker exec -i ${ConId} mkdir ${jobId} && docker cp ${filepath} ${ConId}:/data/${jobId}/${jobId}.${format}`);
+            console.log("file copied:", stdout, stderr);
+        }
 
         return filepath;
     } catch (error) {

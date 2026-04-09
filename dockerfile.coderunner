@@ -1,0 +1,38 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install all languages + Mono (for mcs + mono)
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip \
+    openjdk-17-jdk \
+    golang-go \
+    php-cli \
+    ruby-full \
+    r-base \
+    mono-complete \
+    curl git unzip gnupg ca-certificates wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# -------------------------
+# Install Node.js (LTS lightweight)
+# -------------------------
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# -------------------------
+# Install Kotlin
+# -------------------------
+RUN curl -s https://get.sdkman.io | bash && \
+    bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install kotlin"
+
+# Create data directory with full permissions
+RUN mkdir -p /data && chmod -R 777 /data
+
+# Create user
+RUN useradd -ms /bin/bash normaluser
+
+WORKDIR /data
+
+# Keep container running
+CMD ["tail", "-f", "/dev/null"]

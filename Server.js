@@ -27,9 +27,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 // app.use(cors());
 
+
+const be_url = process.env.API_URL
+const fe_url = process.env.FRONTEND_URL
+
 app.use(
     cors({
-      origin: [`http://localhost:3000`, 'https://onlinecodecompiler.vercel.app', 'https://onlinecodecompiler-devisinghlodhi1999-gmailcom.vercel.app' , 'https://onlinecodecompiler-git-main-devisinghlodhi1999-gmailcom.vercel.app' , 'http://onlinecodecompiler.tk' , 'https://onlinecodecompiler.tk' , 'http://www.onlinecodecompiler.tk' , 'https://www.onlinecodecompiler.tk'],
+      origin: [`https://${be_url}`, `http://${be_url}`, `https://${fe_url}`, `http://${fe_url}` ],
       credentials: 'true',
     })
   );

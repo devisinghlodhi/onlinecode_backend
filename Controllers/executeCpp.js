@@ -4,6 +4,7 @@ const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
 const deleteDockerFolder = require('./deleteDockerFolder');
+const EXECUTE_ON_DOCKER = require('../config')
 const ConId = process.env.CONTAINER_ID;
 
 const outputPath = path.join(__dirname, "outputs");
@@ -22,9 +23,12 @@ const executeCpp = (filepath) => {
     // console.log(__dirname, "\n", filepath,"\n", outputPath, "\n", outPath);
 
     return new Promise((resolve, reject) => {
-                
-        // exec(`docker exec -i ${ConId} g++ ${jobId}/${jobId}.cpp -o ${jobId}/${jobId}.exe && docker exec -i --user normaluser ${ConId} ./${jobId}/${jobId}.exe`, (error, stdout, stderr) => {
-            exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ${outPath}`, (error, stdout, stderr)=>{   
+
+        const command = EXECUTE_ON_DOCKER
+            ? `docker exec -i ${ConId} g++ ${jobId}/${jobId}.cpp -o ${jobId}/${jobId}.exe && docker exec -i --user normaluser ${ConId} ./${jobId}/${jobId}.exe`
+            : `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ${outPath}`
+
+        exec(command, (error, stdout, stderr) => {
             if (stderr) {
                 deletefiles([filepath, outPath]);
                 deletefolders([codeJobidfolderPath]);

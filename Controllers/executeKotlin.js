@@ -4,6 +4,7 @@ const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
 const deleteDockerFolder = require('./deleteDockerFolder');
+const EXECUTE_ON_DOCKER = require('../config')
 const ConId = process.env.CONTAINER_ID;
 
 const outputPath = path.join(__dirname, "outputs");
@@ -23,7 +24,10 @@ const executeKotlin = (filepath)=>{
 
     return new Promise((resolve, reject)=>{
         
-        
+        // const command = EXECUTE_ON_DOCKER
+        //     ? `docker exec -i --user normaluser ${ConId} node ${jobId}/${jobId}.js`
+        //     : `node ${filepath}`
+
         exec(`kotlinc ${filepath} -include-runtime -d ${outPath} && cd ${outputPath} && java -jar ${outPath}`, (error, stdout, stderr)=>{
             
             if(error){

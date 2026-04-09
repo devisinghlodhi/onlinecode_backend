@@ -27,7 +27,9 @@ exports.sendforgotlink = async (req, res) => {
       await userExist.save();
 
       var transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true, // must be true for 465
         auth: {
           user: process.env.EMAIL,
           pass: process.env.EMAIL_PASS
@@ -35,7 +37,7 @@ exports.sendforgotlink = async (req, res) => {
       });
 
       var mailOptions = {
-        from: process.env.EMAIL,
+        from: `"Online Code Compiler" <${process.env.EMAIL}>`,
         to: email,
         subject: 'Forgot Passowrd by Link',
         text: `Click on this link to Forgot Password - ${hosturl}/${token}     Link will be Expire in - 5 Minutes.`

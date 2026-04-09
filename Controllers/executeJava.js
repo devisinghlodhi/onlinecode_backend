@@ -4,6 +4,7 @@ const fs = require('fs');
 const deletefiles = require('./deleteFiles');
 const deletefolders = require('./deleteFolders');
 const deleteDockerFolder = require('./deleteDockerFolder');
+const EXECUTE_ON_DOCKER = require('../config')
 const ConId = process.env.CONTAINER_ID;
 const fsPromises = fs.promises;
 
@@ -42,11 +43,11 @@ const executeJava = async (filepath) => {
             else {
 
                 // execute class file After generate the .class file 
-             
+
                 let classFile;
                 classFile = await getClassfilepath(codeJobidfolderPath);
 
-                if (classFile.length == 0 || classFile == undefined || classFile=='') {
+                if (classFile.length == 0 || classFile == undefined || classFile == '') {
                     reject("error - class file can't created");
                 }
 
@@ -55,10 +56,12 @@ const executeJava = async (filepath) => {
                 let classfilePath_with_ext = path.join(__dirname, "codes", jobId, classFile[0]);
 
 
+                const command = EXECUTE_ON_DOCKER
+                    ? `docker cp ${classfilePath_with_ext} ${ConId}:/data/${jobId}/${classFile[0]} && docker exec -i --user normaluser ${ConId} cd ${jobId} java ${classfilePath}`
+                    : `cd ${codeJobidfolderPath} && java ${classfilePath}`
 
-                // exec(`docker cp ${classfilePath_with_ext} ${ConId}:/data/${jobId}/${classFile[0]} && docker exec -i --user normaluser ${ConId} cd ${jobId} java ${classfilePath}`, (error, stdout, stderr) => {
 
-                exec(`cd ${codeJobidfolderPath} && java ${classfilePath}`, (error, stdout, stderr) => {
+                exec(command, (error, stdout, stderr) => {
                     if (error) {
                         deletefiles([classfilePath_with_ext, filepath]);
                         deletefolders([codeJobidfolderPath]);
